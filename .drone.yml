@@ -1,0 +1,53 @@
+kind: pipeline
+name: httpd-php74
+
+volumes:
+  - name: docker
+    host:
+      path: /var/cache/drone/${DRONE_REPO}/${DRONE_STAGE_NAME}
+
+steps:
+- name: setup
+  image: alpine
+  environment: &setup_env
+    APP_VER_MAJOR: 2
+    APP_VER_MINOR: 4
+    APP_VER_PATCH: 41
+    PHP_VERSION_MAJOR: 7
+    PHP_VERSION_MINOR: 4
+    PHP_VERSION_PATCH: 2
+    PHP_VERSION: ${PHP_VERSION_MAJOR}.${PHP_VERSION_MINOR}.${PHP_VERSION_PATCH}
+    PHP_SHA256: 98284deac017da0d426117ecae7599a1f1bf62ae3911e8bc16c4403a8f4bdf13
+  commands:
+    - echo "1: ${PHP_VERSION} 2:$${PHP_VERSION}"
+    - echo -e -n "$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-$${DRONE_BUILD_NUMBER}" > VERSION
+    - echo -e -n "$${APP_VER_MAJOR}" > .tags
+    - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-$${DRONE_BUILD_NUMBER}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}-php$${PHP_VERSION_MAJOR}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}-php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}-php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}.$${PHP_VERSION_PATCH}" >> .tags
+    - echo -e -n ",$${APP_VER_MAJOR}-php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}.$${PHP_VERSION_PATCH}-$${DRONE_BUILD_NUMBER}" >> .tags
+    - echo -e -n ",php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}" >> .tags
+    - echo -e -n ",latest" >> .tags
+
+- name: publish
+  image: plugins/docker
+  environment:
+    <<: *setup_env
+  settings:
+    repo: izdock/nginx
+    build_args_from_env:
+    - PHP_VERSION
+    - PHP_SHA256
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
+  volumes:
+  - name: docker
+    path: /var/lib/docker
+  when:
+    event: [push, tag]
+    branch: master

@@ -1,49 +1,49 @@
-ARG image_from=debian:buster-slim
-ARG image_from_httpd=httpd:2.4.41
-#ARG image_from_php=php:7.1.30
-#ARG image_from_v8=alexmasterov/alpine-libv8:6.7
+ARG IMAGE_FROM=debian:buster-slim
+ARG IMAGE_FROM_HTTPD=httpd:2.4.41
+#ARG IMAGE_FROM_PHP=php:7.4
+#ARG IMAGE_FROM_V8=alexmasterov/alpine-libv8:6.7
 
-FROM ${image_from_httpd} as httpd
-#FROM ${image_from_php} as php
-#FROM ${image_from_v8} as libv8
-FROM ${image_from}
+FROM ${IMAGE_FROM_HTTPD} as httpd
+#FROM ${IMAGE_FROM_PHP} as php
+#FROM ${IMAGE_FROM_V8} as libv8
+FROM ${IMAGE_FROM}
 
 MAINTAINER Ugo Viti <ugo.viti@initzero.it>
 ENV APP_NAME        "httpd"
 ENV APP_DESCRIPTION "Apache HTTP Server"
 
-## apps versions
-#ARG HTTPD_VERSION=
-ARG PHP_VERSION=7.3.11
-ARG PHP_SHA256=657cf6464bac28e9490c59c07a2cf7bb76c200f09cfadf6e44ea64e95fa01021
+### apps versions
+## https://www.php.net/downloads (php-*.tar.xz format)
+ARG PHP_VERSION=7.4.2
+ARG PHP_SHA256=98284deac017da0d426117ecae7599a1f1bf62ae3911e8bc16c4403a8f4bdf13
+
+## https://httpd.apache.org/download.cgi
+#ARG HTTPD_VERSION=2.4.41
 
 ## php modules version to compile
 # https://github.com/phpredis/phpredis/releases
-ARG REDIS_VERSION=5.1.0
+ARG REDIS_VERSION=5.1.1
 
 # https://github.com/php-memcached-dev/php-memcached/releases
-ARG MEMCACHED_VERSION=3.1.4
+ARG MEMCACHED_VERSION=3.1.5
 
 # https://github.com/Whissi/realpath_turbo/releases
 ARG REALPATHTURBO_VERSION=2.0.0
 
 # https://github.com/xdebug/xdebug/releases
-ARG XDEBUG_VERSION=2.8.0
+ARG XDEBUG_VERSION=2.9.1
 
 # https://github.com/msgpack/msgpack-php/releases
 ARG MSGPACK_VERSION=2.0.3
-
-# https://github.com/nrk/phpiredis/releases
-ARG PHPIREDIS_VERSION=1.0.0
 
 # https://github.com/tarantool/tarantool-php/releases
 ARG TARANTOOL_VERSION=0.3.2
 
 # https://github.com/mongodb/mongo-php-driver/releases
-ARG MONGODB_VERSION=1.6.0
+#ARG MONGODB_VERSION=1.6.1
 
 # https://github.com/phpv8/php-v8/releases
-ARG PHPV8_VERSION=0.2.2
+#ARG PHPV8_VERSION=0.2.2
 
 ## default variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -505,14 +505,6 @@ RUN set -ex \
   && ./configure \
   && make \
   && make install \
-  #&& : "---------- phpiredis ----------" \
-  #&& : "---------- https://blog.remirepo.net/post/2016/11/13/Redis-from-PHP ----------" \
-  #&& curl -fSL --connect-timeout 30 https://github.com/nrk/phpiredis/archive/v${PHPIREDIS_VERSION}.tar.gz | tar xz -C /usr/src/ \
-  #&& cd /usr/src/phpiredis-${PHPIREDIS_VERSION} \
-  #&& phpize \
-  #&& ./configure \
-  #&& make \
-  #&& make install \
   && : "---------- tarantool ----------" \
   && curl -fSL --connect-timeout 30 "https://github.com/tarantool/tarantool-php/archive/${TARANTOOL_VERSION}.tar.gz" | tar xz -C /usr/src/ \
   && cd /usr/src/tarantool-php-${TARANTOOL_VERSION} \

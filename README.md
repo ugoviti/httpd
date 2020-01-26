@@ -1,3 +1,5 @@
+[![Build Status](https://ci.initzero.it/api/badges/initzero/izdock-httpd/status.svg)](https://ci.initzero.it/initzero/izdock-httpd)
+
 # Description
 Production ready Apache HTTPD Web Server + mod_php + izsendmail for MTA logging
 
