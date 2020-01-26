@@ -19,7 +19,6 @@ steps:
     PHP_VERSION: 7.4.2
     PHP_SHA256: 98284deac017da0d426117ecae7599a1f1bf62ae3911e8bc16c4403a8f4bdf13
   commands:
-    - echo "1-${PHP_VERSION} 2-$${PHP_VERSION}"
     - echo -e -n "$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-$${DRONE_BUILD_NUMBER}" > VERSION
     - echo -e -n "$${APP_VER_MAJOR}" > .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}" >> .tags
