@@ -4,7 +4,8 @@
 Production ready Apache HTTPD Web Server + mod_php + izsendmail for MTA logging
 
 # Supported tags
-* `2.4.41-php7.3.X-BUILD, 2.4.41-php7.3.X, 2.4-php7.3, php7.3, 2, 2.4, 2.4.41, latest`
+* `2.4.41-php7.4.X-BUILD, 2.4.41-php7.4.X, 2.4-php7.4, php7.4, 2, 2.4, 2.4.41, latest`
+* `2.4.41-php7.3.X-BUILD, 2.4.41-php7.3.X, 2.4-php7.3, php7.3`
 * `2.4.41-php7.2.X-BUILD, 2.4.41-php7.2.X, 2.4-php7.2, php7.2`
 * `2.4.41-php7.1.X-BUILD, 2.4.41-php7.1.X, 2.4-php7.1, php7.1`
 
