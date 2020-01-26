@@ -194,6 +194,7 @@ RUN set -ex \
     webp \
     libmemcached11 \
     inotify-tools \
+    libonig5 \
 #    dma \
 #    libcurl4-gnutls \
 #    default-mysql-client-core \
@@ -282,6 +283,7 @@ RUN set -ex \
     libxpm-dev \
     libxslt1-dev \
     libmemcached-dev \
+    libonig-dev \
 #    libcurl4-gnutls-dev \
 #    default-libmysqlclient-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
@@ -320,14 +322,14 @@ RUN set -ex \
   && mkdir -p /usr/src/ \
   && PHP_SOURCE="https://secure.php.net/get/php-${PHP_VERSION}.tar.xz/from/this/mirror" \
   && curl -fSL --connect-timeout 30 ${PHP_SOURCE} -o /usr/src/php.tar.xz \
-	&& echo "$PHP_SHA256 /usr/src/php.tar.xz" | sha256sum -c - \
+  && echo "$PHP_SHA256 /usr/src/php.tar.xz" | sha256sum -c - \
   && : "---------- PHP Build ----------" \
   && docker-php-source extract \
   && mkdir -p ${PHP_INI_DIR}/conf.d \
   \
   && cd /usr/src/php \
-	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
-	&& debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
+  && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+  && debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
   && ./configure \
     --build="$gnuArch" \
     --prefix=${PHP_PREFIX} \
@@ -335,28 +337,34 @@ RUN set -ex \
     --with-config-file-path=${PHP_INI_DIR} \
     --with-config-file-scan-dir=${PHP_INI_DIR}/conf.d \
     --with-apxs2=${HTTPD_PREFIX}/bin/apxs \
-# bundled pcre does not support JIT on s390x
-# https://manpages.debian.org/stretch/libpcre3-dev/pcrejit.3.en.html#AVAILABILITY_OF_JIT_SUPPORT
-		$(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
-		--with-libdir="lib/$debMultiarch" \
-    #$([ $PHP_VERSION \< 7.0.0 ] \
-    #  && echo "--with-XXX" \
-    #) \
+    --with-libdir="lib/$debMultiarch" \
     $([ $PHP_VERSION \> 7.0.0 ] \
       && echo "--disable-phpdbg-webhelper" \
       && echo "--enable-huge-code-pages" \
-      && echo "--enable-opcache-file" \
       && echo "--with-pcre-jit" \
-      && echo "--with-webp-dir" \
+      && echo "--with-webp" \
       && echo "--with-openssl" \
+     ) \
+    $([[ $PHP_VERSION > 7.0.0 && $PHP_VERSION < 7.4.0 ]] \
+      && echo "--enable-opcache-file" \
      ) \
     $([ $PHP_VERSION \< 7.2.0 ] \
       && echo "--disable-gd-native-ttf" \
      ) \
     $([ $PHP_VERSION \> 7.2.0 ] \
       && echo "--with-sodium=shared" \
-# require libargon2 >= 20161029
-#      && echo "--with-password-argon2" \
+      && echo "--with-password-argon2" \
+     ) \
+    $([ $PHP_VERSION \< 7.4.0 ] \
+      && echo "--enable-libxml" \
+      && echo "--with-libxml" \
+      && echo "--with-gd" \
+      && echo "--with-libzip" \
+      && echo "--with-pcre-regex" \
+      && echo "--with-png" \
+     ) \
+    $([ $PHP_VERSION \> 7.4.0 ] \
+      && echo "--enable-gd" \
      ) \
     --disable-cgi \
     --disable-debug \
@@ -365,13 +373,13 @@ RUN set -ex \
 #    --disable-embedded-mysqli \
 #    --disable-gcov \
 #    --disable-gd-jis-conv \
-    --disable-ipv6 \
+#    --disable-ipv6 \
 #    --disable-libgcc \
 #    --disable-maintainer-zts \
 #    --disable-phpdbg \
 #    --disable-phpdbg-debug \
 #    --disable-re2c-cgoto \
-    --disable-rpath \
+#    --disable-rpath \
 #    --disable-sigchild \
 #    --disable-static \
     --enable-bcmath \
@@ -385,7 +393,6 @@ RUN set -ex \
     --enable-inline-optimization \
     --enable-intl \
     --enable-json \
-    --enable-libxml \
     --enable-mbregex \
     --enable-mbstring \
     --enable-mysqlnd \
@@ -403,39 +410,33 @@ RUN set -ex \
     --enable-xml \
     --enable-xmlreader \
     --enable-xmlwriter \
-    --enable-zip \
+    --with-zip \
     --with-bz2 \
     --with-curl \
     --with-enchant \
     --with-fpm-group=www-data \
     --with-fpm-user=www-data \
-#    --with-freetype-dir=/usr/include/freetype2/ \
-    --with-gd \
+    --with-freetype \
     --with-iconv \
     --with-libedit \
     --without-imap \
-    --with-jpeg-dir \
-    --with-libxml-dir \
-    --with-libzip \
+    --with-jpeg \
     --with-mhash \
     --with-mysqli \
-    --with-pcre-regex \
     --with-pdo-mysql \
     --with-pdo-pgsql \
     --with-pdo-sqlite \
     --with-pear \
-    --with-png-dir \
     --with-readline \
     --with-system-ciphers \
     --with-xmlrpc \
-    --with-xpm-dir \
+    --with-xpm \
     --with-xsl \
     --with-zlib \
     --without-pgsql \
-		${PHP_EXTRA_CONFIGURE_ARGS:-} \
   && make -j "$(nproc)" \
   && make install \
-	&& find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true \
+  && find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true \
   \
   # install default php.ini
   && cp -a /usr/src/php/php.ini-production ${PHP_PREFIX}/etc/php/php.ini \
