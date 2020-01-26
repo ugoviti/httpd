@@ -1,3 +1,9 @@
+global:
+  environment: &global_env
+    APP_VER_MAJOR: 2
+    APP_VER_MINOR: 4
+    APP_VER_PATCH: 41
+---
 kind: pipeline
 name: httpd-php74
 
@@ -10,9 +16,7 @@ steps:
 - name: setup
   image: alpine
   environment: &setup_env
-    APP_VER_MAJOR: 2
-    APP_VER_MINOR: 4
-    APP_VER_PATCH: 41
+    <<: *global_env
     PHP_VERSION_MAJOR: 7
     PHP_VERSION_MINOR: 4
     PHP_VERSION_PATCH: 2
@@ -23,7 +27,7 @@ steps:
     - echo -e -n "$${APP_VER_MAJOR}" > .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}" >> .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}" >> .tags
-    - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-$${DRONE_BUILD_NUMBER}" >> .tags
+    #- echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-$${DRONE_BUILD_NUMBER}" >> .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-php$${PHP_VERSION_MAJOR}" >> .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}" >> .tags
     - echo -e -n ",$${APP_VER_MAJOR}.$${APP_VER_MINOR}.$${APP_VER_PATCH}-php$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}.$${PHP_VERSION_PATCH}" >> .tags
