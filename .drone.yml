@@ -36,7 +36,7 @@ steps:
   environment:
     <<: *setup_env
   settings:
-    repo: izdock/nginx
+    repo: izdock/httpd
     build_args_from_env:
     - PHP_VERSION
     - PHP_SHA256
