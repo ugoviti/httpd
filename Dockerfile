@@ -360,7 +360,6 @@ RUN set -ex \
       && echo "--enable-zip" \
       && echo "--with-libxml-dir" \
       && echo "--with-png-dir" \
-      && echo "--with-freetype-dir" \
       && echo "--with-gd" \
       && echo "--with-jpeg-dir" \
       && echo "--with-libzip" \
