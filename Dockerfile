@@ -195,6 +195,8 @@ RUN set -ex \
     libmemcached11 \
     inotify-tools \
     libonig5 \
+    brotli \
+    libbrotli1 \
 #    dma \
 #    libcurl4-gnutls \
 #    default-mysql-client-core \
@@ -284,6 +286,7 @@ RUN set -ex \
     libxslt1-dev \
     libmemcached-dev \
     libonig-dev \
+    libbrotli-dev \
 #    libcurl4-gnutls-dev \
 #    default-libmysqlclient-dev \
     ${PHP_EXTRA_BUILD_DEPS:-} \
@@ -425,6 +428,7 @@ RUN set -ex \
     --with-xsl \
     --with-zlib \
     --without-pgsql \
+    --with-tidy \
 #    --disable-dmalloc \
 #    --disable-dtrace \
 #    --disable-embedded-mysqli \
