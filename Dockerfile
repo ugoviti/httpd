@@ -336,13 +336,14 @@ RUN set -ex \
     --sysconfdir=${PHP_INI_DIR} \
     --with-config-file-path=${PHP_INI_DIR} \
     --with-config-file-scan-dir=${PHP_INI_DIR}/conf.d \
-    --with-apxs2=${HTTPD_PREFIX}/bin/apxs \
+    $([ ! -z "$HTTPD_PREFIX" ] \
+      && echo "--with-apxs2=${HTTPD_PREFIX}/bin/apxs" \
+     ) \
     --with-libdir="lib/$debMultiarch" \
     $([ $PHP_VERSION \> 7.0.0 ] \
       && echo "--disable-phpdbg-webhelper" \
       && echo "--enable-huge-code-pages" \
       && echo "--with-pcre-jit" \
-      && echo "--with-webp" \
       && echo "--with-openssl" \
      ) \
     $([[ $PHP_VERSION > 7.0.0 && $PHP_VERSION < 7.4.0 ]] \
@@ -356,32 +357,27 @@ RUN set -ex \
       && echo "--with-password-argon2" \
      ) \
     $([ $PHP_VERSION \< 7.4.0 ] \
-      && echo "--enable-libxml" \
-      && echo "--with-libxml" \
+      && echo "--enable-zip" \
+      && echo "--with-libxml-dir" \
+      && echo "--with-png-dir" \
+      && echo "--with-freetype-dir" \
       && echo "--with-gd" \
+      && echo "--with-jpeg-dir" \
       && echo "--with-libzip" \
       && echo "--with-pcre-regex" \
-      && echo "--with-png" \
+      && echo "--with-webp-dir" \
+      && echo "--enable-libxml" \
      ) \
     $([ $PHP_VERSION \> 7.4.0 ] \
       && echo "--enable-gd" \
+      && echo "--with-freetype" \
+      && echo "--with-jpeg" \
+      && echo "--with-xpm" \
+      && echo "--with-webp" \
+      && echo "--with-zip" \
      ) \
     --disable-cgi \
     --disable-debug \
-#    --disable-dmalloc \
-#    --disable-dtrace \
-#    --disable-embedded-mysqli \
-#    --disable-gcov \
-#    --disable-gd-jis-conv \
-#    --disable-ipv6 \
-#    --disable-libgcc \
-#    --disable-maintainer-zts \
-#    --disable-phpdbg \
-#    --disable-phpdbg-debug \
-#    --disable-re2c-cgoto \
-#    --disable-rpath \
-#    --disable-sigchild \
-#    --disable-static \
     --enable-bcmath \
     --enable-calendar \
     --enable-dba \
@@ -410,17 +406,14 @@ RUN set -ex \
     --enable-xml \
     --enable-xmlreader \
     --enable-xmlwriter \
-    --with-zip \
     --with-bz2 \
     --with-curl \
     --with-enchant \
     --with-fpm-group=www-data \
     --with-fpm-user=www-data \
-    --with-freetype \
     --with-iconv \
     --with-libedit \
     --without-imap \
-    --with-jpeg \
     --with-mhash \
     --with-mysqli \
     --with-pdo-mysql \
@@ -430,10 +423,23 @@ RUN set -ex \
     --with-readline \
     --with-system-ciphers \
     --with-xmlrpc \
-    --with-xpm \
     --with-xsl \
     --with-zlib \
     --without-pgsql \
+#    --disable-dmalloc \
+#    --disable-dtrace \
+#    --disable-embedded-mysqli \
+#    --disable-gcov \
+#    --disable-gd-jis-conv \
+#    --disable-ipv6 \
+#    --disable-libgcc \
+#    --disable-maintainer-zts \
+#    --disable-phpdbg \
+#    --disable-phpdbg-debug \
+#    --disable-re2c-cgoto \
+#    --disable-rpath \
+#    --disable-sigchild \
+#    --disable-static \
   && make -j "$(nproc)" \
   && make install \
   && find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true \
