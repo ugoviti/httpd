@@ -51,7 +51,6 @@ steps:
     event: [push, tag]
     branch: master
 
-steps:
 - name: setup-php-fpm
   image: alpine
   environment:
