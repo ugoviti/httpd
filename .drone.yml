@@ -70,7 +70,7 @@ steps:
     repo: izdock/php-fpm
     dockerfile: php-fpm/Dockerfile
     build_args:
-    - IMAGE_FROM="izdock/httpd:php7.4"
+    - IMAGE_FROM=izdock/httpd:php7.4
     username: izdock
     password:
       from_secret: DOCKER_PASSWORD
@@ -148,7 +148,7 @@ steps:
     repo: izdock/php-fpm
     dockerfile: php-fpm/Dockerfile
     build_args:
-    - IMAGE_FROM="izdock/httpd:php7.3"
+    - IMAGE_FROM=izdock/httpd:php7.3
     username:
       from_secret: DOCKER_USERNAME
     password:
