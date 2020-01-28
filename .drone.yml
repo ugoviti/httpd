@@ -61,6 +61,7 @@ steps:
     - echo -e -n ",$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}" >> .tags
     - echo -e -n ",$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}.$${PHP_VERSION_PATCH}" >> .tags
     - echo -e -n ",$${PHP_VERSION_MAJOR}.$${PHP_VERSION_MINOR}.$${PHP_VERSION_PATCH}-$${DRONE_BUILD_NUMBER}" >> .tags
+    - echo -e -n ",latest" >> .tags
 
 - name: publish-php-fpm
   image: plugins/docker
