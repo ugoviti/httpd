@@ -14,8 +14,8 @@ ENV APP_DESCRIPTION "Apache HTTP Server"
 
 ### apps versions
 ## https://www.php.net/downloads (php-*.tar.xz format)
-ARG PHP_VERSION=7.4.2
-ARG PHP_SHA256=98284deac017da0d426117ecae7599a1f1bf62ae3911e8bc16c4403a8f4bdf13
+ARG PHP_VERSION=7.4.3
+ARG PHP_SHA256=cf1f856d877c268124ded1ede40c9fb6142b125fdaafdc54f855120b8bc6982a
 
 ## https://httpd.apache.org/download.cgi
 #ARG HTTPD_VERSION=2.4.41
@@ -27,17 +27,17 @@ ARG REDIS_VERSION=5.1.1
 # https://github.com/php-memcached-dev/php-memcached/releases
 ARG MEMCACHED_VERSION=3.1.5
 
-# https://github.com/Whissi/realpath_turbo/releases
-ARG REALPATHTURBO_VERSION=2.0.0
-
 # https://github.com/xdebug/xdebug/releases
 ARG XDEBUG_VERSION=2.9.1
 
+# https://github.com/Whissi/realpath_turbo/releases
+#ARG REALPATHTURBO_VERSION=2.0.0
+
 # https://github.com/msgpack/msgpack-php/releases
-ARG MSGPACK_VERSION=2.0.3
+#ARG MSGPACK_VERSION=2.0.3
 
 # https://github.com/tarantool/tarantool-php/releases
-ARG TARANTOOL_VERSION=0.3.2
+#ARG TARANTOOL_VERSION=0.3.2
 
 # https://github.com/mongodb/mongo-php-driver/releases
 #ARG MONGODB_VERSION=1.6.1
@@ -487,9 +487,9 @@ RUN set -ex \
   \
   # compile external php modules for version >7.0.0
   && if [ $PHP_VERSION \> 7.0.0 ];then cd /usr/src \
-  && : "---------- realpathturbo - https://bugs.php.net/bug.php?id=52312 ----------" \
-  && curl -fSL --connect-timeout 30 "https://github.com/Whissi/realpath_turbo/archive/v${REALPATHTURBO_VERSION}.tar.gz" | tar xz -C /usr/src/ \
-  && cd /usr/src/realpath_turbo-${REALPATHTURBO_VERSION} \
+  && : "---------- memcached ----------" \
+  && curl -fSL --connect-timeout 30 "https://github.com/php-memcached-dev/php-memcached/archive/v${MEMCACHED_VERSION}.tar.gz" | tar xz -C /usr/src/ \
+  && cd /usr/src/php-memcached-${MEMCACHED_VERSION} \
   && phpize \
   && ./configure \
   && make \
@@ -501,50 +501,50 @@ RUN set -ex \
   && ./configure \
   && make \
   && make install \
-  && : "---------- msgpack ----------" \
-  && curl -fSL --connect-timeout 30 "https://github.com/msgpack/msgpack-php/archive/msgpack-${MSGPACK_VERSION}.tar.gz" | tar xz -C /usr/src/ \
-  && cd /usr/src/msgpack-php-msgpack-${MSGPACK_VERSION} \
-  && phpize \
-  && ./configure \
-  && make \
-  && make install \
-  && : "---------- memcached ----------" \
-  && curl -fSL --connect-timeout 30 "https://github.com/php-memcached-dev/php-memcached/archive/v${MEMCACHED_VERSION}.tar.gz" | tar xz -C /usr/src/ \
-  && cd /usr/src/php-memcached-${MEMCACHED_VERSION} \
-  && phpize \
-  && ./configure \
-  && make \
-  && make install \
-  && : "---------- tarantool ----------" \
-  && curl -fSL --connect-timeout 30 "https://github.com/tarantool/tarantool-php/archive/${TARANTOOL_VERSION}.tar.gz" | tar xz -C /usr/src/ \
-  && cd /usr/src/tarantool-php-${TARANTOOL_VERSION} \
-  && phpize \
-  && ./configure \
-  && make \
-  && make install \
-  #&& : "---------- MongoDB ----------" \
-  #&& apk add --virtual .mongodb-build-dependencies cmake pkgconfig \
-  #&& apk add --virtual .mongodb-runtime-dependencies libressl2.7-libtls \
-  #&& MONGODB_FILENAME="mongodb-${MONGODB_VERSION}" \
-  #&& MONGODB_SOURCE="https://github.com/mongodb/mongo-php-driver/releases/download/${MONGODB_VERSION}/${MONGODB_FILENAME}.tgz" \
-  #&& curl -fSL --connect-timeout 30 ${MONGODB_SOURCE} | tar xz -C /usr/src/ \
-  #&& cd /usr/src/${MONGODB_FILENAME} \
-  #&& phpize \
-  #&& ./configure --with-mongodb-ssl=libressl \
-  #&& make \
-  #&& make install \
-  #&& apk del .mongodb-build-dependencies \
-  #&& : "---------- php-v8 ----------" \
-  #&& PHPV8_FILENAME="php-v8-${PHPV8_VERSION}" \
-  #&& PHPV8_SOURCE="https://github.com/pinepain/php-v8/archive/v${PHPV8_VERSION}.tar.gz" \
-  #&& curl -fSL --connect-timeout 30 ${PHPV8_SOURCE} | tar xz -C /usr/src/ \
-  #&& cd /usr/src/${PHPV8_FILENAME} \
-  #&& phpize \
-  #&& ./configure --with-v8=${PREFIX}/v8 \
-  #&& make \
-  #&& make install \
   ;fi \
   \
+#   && : "---------- msgpack ----------" \
+#   && curl -fSL --connect-timeout 30 "https://github.com/msgpack/msgpack-php/archive/msgpack-${MSGPACK_VERSION}.tar.gz" | tar xz -C /usr/src/ \
+#   && cd /usr/src/msgpack-php-msgpack-${MSGPACK_VERSION} \
+#   && phpize \
+#   && ./configure \
+#   && make \
+#   && make install \
+#   && : "---------- tarantool ----------" \
+#   && curl -fSL --connect-timeout 30 "https://github.com/tarantool/tarantool-php/archive/${TARANTOOL_VERSION}.tar.gz" | tar xz -C /usr/src/ \
+#   && cd /usr/src/tarantool-php-${TARANTOOL_VERSION} \
+#   && phpize \
+#   && ./configure \
+#   && make \
+#   && make install \
+#   && : "---------- realpathturbo - https://bugs.php.net/bug.php?id=52312 ----------" \
+#   && curl -fSL --connect-timeout 30 "https://github.com/Whissi/realpath_turbo/archive/v${REALPATHTURBO_VERSION}.tar.gz" | tar xz -C /usr/src/ \
+#   && cd /usr/src/realpath_turbo-${REALPATHTURBO_VERSION} \
+#   && phpize \
+#   && ./configure \
+#   && make \
+#   && make install \
+#   && : "---------- MongoDB ----------" \
+#   && apk add --virtual .mongodb-build-dependencies cmake pkgconfig \
+#   && apk add --virtual .mongodb-runtime-dependencies libressl2.7-libtls \
+#   && MONGODB_FILENAME="mongodb-${MONGODB_VERSION}" \
+#   && MONGODB_SOURCE="https://github.com/mongodb/mongo-php-driver/releases/download/${MONGODB_VERSION}/${MONGODB_FILENAME}.tgz" \
+#   && curl -fSL --connect-timeout 30 ${MONGODB_SOURCE} | tar xz -C /usr/src/ \
+#   && cd /usr/src/${MONGODB_FILENAME} \
+#   && phpize \
+#   && ./configure --with-mongodb-ssl=libressl \
+#   && make \
+#   && make install \
+#   && apk del .mongodb-build-dependencies \
+#   && : "---------- php-v8 ----------" \
+#   && PHPV8_FILENAME="php-v8-${PHPV8_VERSION}" \
+#   && PHPV8_SOURCE="https://github.com/pinepain/php-v8/archive/v${PHPV8_VERSION}.tar.gz" \
+#   && curl -fSL --connect-timeout 30 ${PHPV8_SOURCE} | tar xz -C /usr/src/ \
+#   && cd /usr/src/${PHPV8_FILENAME} \
+#   && phpize \
+#   && ./configure --with-v8=${PREFIX}/v8 \
+#   && make \
+#   && make install \
   # enable all compiled modules
   # disabled: use entrypoint-hook.sh instead
   #&& for MODULE in ${PHP_PREFIX}/lib/php/extensions/*/*.so; do docker-php-ext-enable $MODULE ; done \
@@ -552,27 +552,27 @@ RUN set -ex \
   # cleanup system
   && : "---------- Removing build dependencies, clean temporary files ----------" \
   # https://github.com/docker-library/php/issues/443
-	&& pecl update-channels \
-	&& rm -rf /tmp/pear ~/.pearrc \
+  && pecl update-channels \
+  && rm -rf /tmp/pear ~/.pearrc \
   # remove php sources
   && cd /usr/src/php \
-	&& make clean \
+  && make clean \
   && cd \
   && docker-php-source delete \
   # remove packages used for build stage
-	&& apt-mark auto '.*' > /dev/null \
-	&& [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
-	find /usr/local -type f -executable -exec ldd '{}' ';' \
-		| awk '/=>/ { print $(NF-1) }' \
-		| sort -u \
-		| xargs -r dpkg-query --search \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -r apt-mark manual \
-	\
+  && apt-mark auto '.*' > /dev/null \
+  && [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
+  find /usr/local -type f -executable -exec ldd '{}' ';' \
+  | awk '/=>/ { print $(NF-1) }' \
+  | sort -u \
+  | xargs -r dpkg-query --search \
+  | cut -d: -f1 \
+  | sort -u \
+  | xargs -r apt-mark manual \
+  \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/usr/src/* /usr/src/* ${PHP_PREFIX}/lib/php/test ${PHP_PREFIX}/lib/php/doc ${PHP_PREFIX}/php/man \
-	\
+  \
   && : "---------- Show Builded PHP Version ----------" \
   && php --version
 
@@ -596,8 +596,8 @@ RUN set -xe \
   && sed "s/^Group.*/Group www-data/" -i "${HTTPD_PREFIX}/conf/httpd.conf" \
   #&& sed "s/#ServerName.*/ServerName ${HOSTNAME}/" -i "${HTTPD_PREFIX}/conf/httpd.conf" \
   && echo "IncludeOptional /etc/apache2/conf.d/*.conf" >> "${HTTPD_PREFIX}/conf/httpd.conf" \
-	&& sed -ri -e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' "${HTTPD_PREFIX}/conf/httpd.conf" \
-	\
+  && sed -ri -e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' -e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' "${HTTPD_PREFIX}/conf/httpd.conf" \
+  \
   # PHP: for compatibility with alpine linux make config symlinks to system default /etc dir
   && ln -s ${PHP_PREFIX}/etc/php \
   && ln -s ${PHP_PREFIX}/etc/pear.conf
@@ -606,39 +606,39 @@ RUN set -xe \
 RUN set -ex \
   && : "---------- PHP-FPM configuration ----------" \
   && cd ${PHP_PREFIX}/etc/php \
-	&& if [ -d php-fpm.d ]; then \
-		# for some reason, upstream's php-fpm.conf.default has "include=NONE/etc/php/php-fpm.d/*.conf"
-		sed 's!=NONE/!=!g' php-fpm.conf.default | tee php-fpm.conf > /dev/null; \
-		cp php-fpm.d/www.conf.default php-fpm.d/www.conf; \
-	else \
-		# PHP 5.x doesn't use "include=" by default, so we'll create our own simple config that mimics PHP 7+ for consistency
-		mkdir php-fpm.d; \
-		cp php-fpm.conf.default php-fpm.d/www.conf; \
-		{ \
-			echo '[global]'; \
-			echo 'include=etc/php/php-fpm.d/*.conf'; \
-		} | tee php-fpm.conf; \
-	fi \
-	&& { \
-		echo '[global]'; \
-		echo 'error_log = /proc/self/fd/2'; \
-		echo; \
-		echo '[www]'; \
-		echo '; if we send this to /proc/self/fd/1, it never appears'; \
-		echo 'access.log = /proc/self/fd/2'; \
-		echo; \
-		echo 'clear_env = no'; \
-		echo; \
-		echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
-		echo 'catch_workers_output = yes'; \
-	} | tee php-fpm.d/docker.conf \
-	&& { \
-		echo '[global]'; \
-		echo 'daemonize = no'; \
-		echo; \
-		echo '[www]'; \
-		echo 'listen = 9000'; \
-	} | tee php-fpm.d/zz-docker.conf
+  && if [ -d php-fpm.d ]; then \
+    # for some reason, upstream's php-fpm.conf.default has "include=NONE/etc/php/php-fpm.d/*.conf"
+    sed 's!=NONE/!=!g' php-fpm.conf.default | tee php-fpm.conf > /dev/null; \
+    cp php-fpm.d/www.conf.default php-fpm.d/www.conf; \
+  else \
+    # PHP 5.x doesn't use "include=" by default, so we'll create our own simple config that mimics PHP 7+ for consistency
+    mkdir php-fpm.d; \
+    cp php-fpm.conf.default php-fpm.d/www.conf; \
+    { \
+      echo '[global]'; \
+      echo 'include=etc/php/php-fpm.d/*.conf'; \
+    } | tee php-fpm.conf; \
+    fi \
+    && { \
+      echo '[global]'; \
+      echo 'error_log = /proc/self/fd/2'; \
+      echo; \
+      echo '[www]'; \
+      echo '; if we send this to /proc/self/fd/1, it never appears'; \
+      echo 'access.log = /proc/self/fd/2'; \
+      echo; \
+      echo 'clear_env = no'; \
+      echo; \
+      echo '; Ensure worker stdout and stderr are sent to the main error log.'; \
+      echo 'catch_workers_output = yes'; \
+    } | tee php-fpm.d/docker.conf \
+    && { \
+      echo '[global]'; \
+      echo 'daemonize = no'; \
+      echo; \
+      echo '[www]'; \
+      echo 'listen = 9000'; \
+    } | tee php-fpm.d/zz-docker.conf
 
 # exposed ports
 EXPOSE 80/TCP 443/TCP
