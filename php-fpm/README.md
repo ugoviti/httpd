@@ -10,7 +10,7 @@ Production ready PHP-FPM (FastCGI Process Manager) image based on Debian (Slim) 
 Where **X** is the patch version number, and **BUILD** is the build number (look into project [Tags](/repository/docker/izdock/php-fpm/tags/) page to discover the latest versions)
 
 # Dockerfile
-- https://github.com/ugoviti/izdock/blob/master/php-fpm/Dockerfile
+- https://github.com/ugoviti/izdock-httpd/blob/master/php-fpm/Dockerfile
 
 # Features
 - Small image footprint (all images are based on [izdock httpd image](/repository/docker/izdock/httpd))
