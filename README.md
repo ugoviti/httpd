@@ -1,5 +1,3 @@
-[![Build Status](https://ci.initzero.it/api/badges/initzero/izdock-httpd/status.svg)](https://ci.initzero.it/initzero/izdock-httpd)
-
 # Description
 Production ready Apache HTTPD Web Server + mod_php + izsendmail for MTA logging
 
@@ -12,7 +10,7 @@ Production ready Apache HTTPD Web Server + mod_php + izsendmail for MTA logging
 Where **X** is the patch version number, and **BUILD** is the build number (look into project [Tags](/repository/docker/izdock/httpd/tags/) page to discover the latest versions)
 
 # Dockerfile
-- https://github.com/ugoviti/izdock/blob/master/httpd/Dockerfile
+- https://github.com/ugoviti/izdock-httpd/blob/master/Dockerfile
 
 # Features
 - Small image footprint
