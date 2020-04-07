@@ -1,5 +1,5 @@
 ARG IMAGE_FROM=debian:buster-slim
-ARG IMAGE_FROM_HTTPD=httpd:2.4.41
+ARG IMAGE_FROM_HTTPD=httpd:2.4.43
 #ARG IMAGE_FROM_PHP=php:7.4
 #ARG IMAGE_FROM_V8=alexmasterov/alpine-libv8:6.7
 
@@ -14,21 +14,21 @@ ENV APP_DESCRIPTION "Apache HTTP Server"
 
 ### apps versions
 ## https://www.php.net/downloads (php-*.tar.xz format)
-ARG PHP_VERSION=7.4.3
-ARG PHP_SHA256=cf1f856d877c268124ded1ede40c9fb6142b125fdaafdc54f855120b8bc6982a
+ARG PHP_VERSION=7.4.4
+ARG PHP_SHA256=1873c4cefdd3df9a78dcffb2198bba5c2f0464f55c9c960720c84df483fca74c
 
 ## https://httpd.apache.org/download.cgi
 #ARG HTTPD_VERSION=2.4.41
 
 ## php modules version to compile
 # https://github.com/phpredis/phpredis/releases
-ARG REDIS_VERSION=5.1.1
+ARG REDIS_VERSION=5.2.1
 
 # https://github.com/php-memcached-dev/php-memcached/releases
 ARG MEMCACHED_VERSION=3.1.5
 
 # https://github.com/xdebug/xdebug/releases
-ARG XDEBUG_VERSION=2.9.1
+ARG XDEBUG_VERSION=2.9.4
 
 # https://github.com/Whissi/realpath_turbo/releases
 #ARG REALPATHTURBO_VERSION=2.0.0
