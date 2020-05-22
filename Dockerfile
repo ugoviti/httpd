@@ -14,21 +14,21 @@ ENV APP_DESCRIPTION "Apache HTTP Server"
 
 ### apps versions
 ## https://www.php.net/downloads (php-*.tar.xz format)
-ARG PHP_VERSION=7.4.4
-ARG PHP_SHA256=1873c4cefdd3df9a78dcffb2198bba5c2f0464f55c9c960720c84df483fca74c
+ARG PHP_VERSION=7.4.6
+ARG PHP_SHA256=d740322f84f63019622b9f369d64ea5ab676547d2bdcf12be77a5a4cffd06832
 
 ## https://httpd.apache.org/download.cgi
 #ARG HTTPD_VERSION=2.4.41
 
 ## php modules version to compile
 # https://github.com/phpredis/phpredis/releases
-ARG REDIS_VERSION=5.2.1
+ARG REDIS_VERSION=5.2.2
 
 # https://github.com/php-memcached-dev/php-memcached/releases
 ARG MEMCACHED_VERSION=3.1.5
 
 # https://github.com/xdebug/xdebug/releases
-ARG XDEBUG_VERSION=2.9.4
+ARG XDEBUG_VERSION=2.9.5
 
 # https://github.com/Whissi/realpath_turbo/releases
 #ARG REALPATHTURBO_VERSION=2.0.0
